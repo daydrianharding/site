@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="site-header">
+            <h1><i class="fas fa-shield-alt"></i> Official Admin Panel</h1>
+            <div id="user-info" class="user-info" style="display: none;">
+                <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
+                <span id="username" class="username"></span>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+        </header>
+        
+        <main>
+            <div class="admin-sidebar" id="admin-sidebar" style="display: none;">
+                <h3><i class="fas fa-cogs"></i> Admin Panel</h3>
+                <button onclick="toggleAdminPanel()" class="close-admin">×</button>
+                <div class="admin-section">
+                    <h4>Ban Management</h4>
+                    <input type="text" id="ban-username" placeholder="Username to ban">
+                    <button onclick="banUser()" class="ban-btn">Ban User</button>
+                    <input type="text" id="unban-username" placeholder="Username to unban">
+                    <button onclick="unbanUser()" class="unban-btn">Unban User</button>
+                </div>
+                <div class="admin-section">
+                    <h4>Chat Management</h4>
+                    <button onclick="viewReports()" class="admin-btn">
+                        <i class="fas fa-bug"></i> Report Bug Chats
+                    </button>
+                    <button onclick="viewAppeals()" class="admin-btn">
+                        <i class="fas fa-gavel"></i> Appeal Chats
+                    </button>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="auth-section" id="auth-section">
+                    <h2>Login with Roblox</h2>
+                    <button onclick="loginWithRoblox()" class="roblox-login-btn">
+                        <i class="fab fa-roblox"></i> Sign in with Roblox
+                    </button>
+                </div>
+                
+                <div class="dashboard" id="dashboard" style="display: none;">
+                    <h2>Welcome, <span id="display-username"></span>!</h2>
+                    
+                    <div class="dashboard-grid">
+                        <div class="card" onclick="window.location.href='chat.html'">
+                            <i class="fas fa-comments"></i>
+                            <h3>Chat</h3>
+                            <p>Join the conversation</p>
+                        </div>
+                        
+                        <div class="card" onclick="window.location.href='report-bug.html'">
+                            <i class="fas fa-bug"></i>
+                            <h3>Report Bug</h3>
+                            <p>Report issues directly to admin</p>
+                        </div>
+                        
+                        <div class="card" onclick="window.location.href='appeal.html'">
+                            <i class="fas fa-gavel"></i>
+                            <h3>Ban Appeal</h3>
+                            <p>Appeal your ban</p>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-panel-btn" id="admin-panel-btn" style="display: none;">
+                        <button onclick="toggleAdminPanel()" class="admin-toggle-btn">
+                            <i class="fas fa-user-shield"></i> Admin Panel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <div id="ban-overlay" class="ban-overlay" style="display: none;">
+            <div class="ban-message">
+                <h2><i class="fas fa-ban"></i> You're Banned</h2>
+                <p>Your account has been suspended from this platform.</p>
+                <button onclick="window.location.href='appeal.html'" class="appeal-btn">Appeal Ban</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
