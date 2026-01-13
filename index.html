@@ -3,63 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ava</title>
+    <title>Nexus Hub - Official Admin Platform</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Background Sparkles -->
-    <div class="sparkle-container">
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
-    </div>
-    
-    <!-- Floating Hearts -->
-    <div class="hearts">
-        <div class="heart">💖</div>
-        <div class="heart">✨</div>
-        <div class="heart">🌸</div>
-        <div class="heart">🦄</div>
-        <div class="heart">💕</div>
-    </div>
-    
     <div class="container">
-        <!-- Girly Header -->
+        <!-- Header -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-crown crown-icon"></i>
-                    <h1 class="site-title">Sparkle<span class="pink-text">Chat</span> 💕</h1>
-                    <div class="subtitle">By Princess Ava ✨</div>
+                    <div class="logo-icon">⚡</div>
+                    <div>
+                        <h1 class="site-title">Nexus <span class="highlight">Hub</span></h1>
+                        <p class="tagline">Official Admin Platform</p>
+                    </div>
                 </div>
+                
                 <div id="user-info" class="user-info" style="display: none;">
-                    <div class="user-badge">
+                    <div class="user-profile">
                         <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
                         <div class="user-details">
                             <span id="username" class="username"></span>
                             <button onclick="logout()" class="logout-btn">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+                                <i class="fas fa-sign-out-alt"></i> Exit
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Admin Panel Toggle -->
-            <button id="admin-toggle" onclick="toggleAdminPanel()" class="admin-toggle-btn" style="display: none;">
-                <i class="fas fa-magic"></i>
-                <span>Admin Magic</span>
-            </button>
         </header>
-        
-        <!-- Admin Sidebar (Girly Design) -->
+
+        <!-- Admin Panel Toggle -->
+        <button id="admin-toggle" onclick="toggleAdminPanel()" class="admin-toggle-btn" style="display: none;">
+            <i class="fas fa-shield-alt"></i>
+            <span>Control Panel</span>
+        </button>
+
+        <!-- Admin Sidebar -->
         <div class="admin-sidebar" id="admin-sidebar">
             <div class="sidebar-header">
-                <h3><i class="fas fa-star"></i> Princess Panel</h3>
+                <h3><i class="fas fa-cogs"></i> System Control</h3>
                 <button onclick="toggleAdminPanel()" class="close-admin">
                     <i class="fas fa-times"></i>
                 </button>
@@ -67,82 +52,95 @@
             
             <div class="admin-content">
                 <!-- User Management -->
-                <div class="admin-section sparkle-card">
-                    <h4><i class="fas fa-user-crown"></i> Royal Commands</h4>
+                <div class="admin-section">
+                    <h4><i class="fas fa-user-slash"></i> Moderation Tools</h4>
                     <div class="input-group">
-                        <input type="text" id="ban-username" placeholder="👑 Username to ban">
-                        <button onclick="banUser()" class="ban-btn">
-                            <i class="fas fa-ban"></i> Ban
+                        <input type="text" id="ban-username" placeholder="Username to restrict">
+                        <button onclick="banUser()" class="action-btn restrict-btn">
+                            <i class="fas fa-ban"></i> Restrict Access
                         </button>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="unban-username" placeholder="💖 Username to unban">
-                        <button onclick="unbanUser()" class="unban-btn">
-                            <i class="fas fa-heart"></i> Unban
+                        <input type="text" id="unban-username" placeholder="Username to restore">
+                        <button onclick="unbanUser()" class="action-btn restore-btn">
+                            <i class="fas fa-check-circle"></i> Restore Access
                         </button>
                     </div>
                 </div>
                 
-                <!-- Chat Management -->
-                <div class="admin-section sparkle-card">
-                    <h4><i class="fas fa-comment-dots"></i> Chat Management</h4>
-                    <button onclick="viewReports()" class="admin-btn">
-                        <i class="fas fa-bug"></i> Bug Reports ✨
+                <!-- System Management -->
+                <div class="admin-section">
+                    <h4><i class="fas fa-tasks"></i> System Modules</h4>
+                    <button onclick="viewReports()" class="module-btn">
+                        <i class="fas fa-exclamation-triangle"></i> Issue Reports
                     </button>
-                    <button onclick="viewAppeals()" class="admin-btn">
-                        <i class="fas fa-hand-sparkles"></i> Appeals 🎀
+                    <button onclick="viewAppeals()" class="module-btn">
+                        <i class="fas fa-balance-scale"></i> Access Appeals
+                    </button>
+                    <button onclick="viewLogs()" class="module-btn">
+                        <i class="fas fa-history"></i> Activity Logs
                     </button>
                 </div>
                 
-                <!-- Stats -->
-                <div class="admin-section sparkle-card">
-                    <h4><i class="fas fa-chart-line"></i> Royal Stats</h4>
-                    <div class="stats">
-                        <div class="stat-item">
+                <!-- System Stats -->
+                <div class="admin-section">
+                    <h4><i class="fas fa-chart-bar"></i> System Status</h4>
+                    <div class="stats-grid">
+                        <div class="stat-card">
                             <i class="fas fa-users"></i>
-                            <span id="user-count">0</span> Users
+                            <div>
+                                <span id="user-count" class="stat-number">0</span>
+                                <span class="stat-label">Active Users</span>
+                            </div>
                         </div>
-                        <div class="stat-item">
-                            <i class="fas fa-ban"></i>
-                            <span id="ban-count">0</span> Banned
+                        <div class="stat-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <span id="ban-count" class="stat-number">0</span>
+                                <span class="stat-label">Restrictions</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
+        <!-- Main Content -->
         <main>
             <!-- Welcome Section -->
             <section class="welcome-section" id="welcome-section">
-                <div class="welcome-content sparkle-card">
+                <div class="welcome-card">
                     <div class="welcome-header">
-                        <i class="fas fa-sparkles welcome-icon"></i>
-                        <h2>Welcome to SparkleChat! ✨</h2>
-                        <p class="welcome-subtitle">A magical space for Princess Ava and friends 💕</p>
+                        <i class="fas fa-terminal welcome-icon"></i>
+                        <h2>Welcome to Nexus Hub</h2>
+                        <p class="welcome-subtitle">Secure Platform Access Portal</p>
                     </div>
                     
                     <!-- Login Section -->
                     <div class="login-section" id="auth-section">
                         <div class="login-header">
-                            <h3><i class="fab fa-roblox"></i> Enter Your Roblox World</h3>
-                            <p>Type your Roblox username to begin the magic!</p>
+                            <h3><i class="fab fa-roblox"></i> Identity Verification</h3>
+                            <p>Enter your Roblox username for authentication</p>
                         </div>
                         
                         <div class="login-form">
-                            <div class="input-group">
-                                <input type="text" 
-                                       id="roblox-username" 
-                                       placeholder="🌸 Your Roblox Username 🌸"
-                                       class="girly-input">
-                                <button onclick="checkRobloxAccount()" class="login-btn">
-                                    <i class="fas fa-magic"></i> Start Magic
+                            <div class="input-container">
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" 
+                                           id="roblox-username" 
+                                           placeholder="Enter Roblox username"
+                                           class="auth-input">
+                                </div>
+                                <button onclick="verifyRobloxAccount()" class="verify-btn">
+                                    <i class="fas fa-key"></i> Verify Identity
                                 </button>
                             </div>
                             <div id="login-error" class="error-message"></div>
                             
-                            <div class="login-help">
-                                <p><i class="fas fa-info-circle"></i> Just type your exact Roblox username</p>
-                                <p><i class="fas fa-crown"></i> If you're Princess Ava, you'll get royal treatment! 👑</p>
+                            <div class="auth-info">
+                                <p><i class="fas fa-info-circle"></i> Exact Roblox username required</p>
+                                <p><i class="fas fa-star"></i> Username "S1xsGG" receives admin privileges</p>
                             </div>
                         </div>
                     </div>
@@ -151,114 +149,118 @@
             
             <!-- Dashboard (Hidden until login) -->
             <section class="dashboard" id="dashboard" style="display: none;">
-                <div class="welcome-user sparkle-card">
-                    <div class="user-welcome">
+                <!-- User Welcome -->
+                <div class="user-welcome-card">
+                    <div class="user-welcome-content">
                         <img id="dashboard-avatar" class="user-avatar-large" src="" alt="Avatar">
                         <div class="welcome-text">
-                            <h2>Hello, <span id="display-username"></span>! 💕</h2>
-                            <p>Ready to sparkle and shine today? ✨</p>
+                            <h2>Access Granted, <span id="display-username"></span></h2>
+                            <p>Welcome back to the system</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Dashboard Cards -->
-                <div class="dashboard-grid">
-                    <div class="card girly-card" onclick="window.location.href='chat.html'">
-                        <div class="card-icon pink-bg">
+                <!-- Quick Access Grid -->
+                <div class="access-grid">
+                    <div class="access-card" onclick="openChat()">
+                        <div class="card-icon primary">
                             <i class="fas fa-comments"></i>
                         </div>
-                        <h3>Magic Chat ✨</h3>
-                        <p>Chat with sparkle and shine!</p>
-                        <div class="card-sparkle">💫</div>
+                        <h3>Secure Chat</h3>
+                        <p>Encrypted communication channel</p>
+                        <button class="access-btn">Enter Channel</button>
                     </div>
                     
-                    <div class="card girly-card" onclick="window.location.href='report-bug.html'">
-                        <div class="card-icon purple-bg">
+                    <div class="access-card" onclick="openReport()">
+                        <div class="card-icon secondary">
                             <i class="fas fa-bug"></i>
                         </div>
-                        <h3>Report Glitch 🐛</h3>
-                        <p>Found a bug? Tell Princess Ava!</p>
-                        <div class="card-sparkle">🌸</div>
+                        <h3>Report Issue</h3>
+                        <p>Submit system issues for review</p>
+                        <button class="access-btn">Create Report</button>
                     </div>
                     
-                    <div class="card girly-card" onclick="window.location.href='appeal.html'">
-                        <div class="card-icon pink-bg">
-                            <i class="fas fa-gavel"></i>
+                    <div class="access-card" onclick="openAppeal()">
+                        <div class="card-icon primary">
+                            <i class="fas fa-balance-scale"></i>
                         </div>
-                        <h3>Ban Appeal 🎀</h3>
-                        <p>Appeal your ban with kindness</p>
-                        <div class="card-sparkle">💕</div>
+                        <h3>Access Appeal</h3>
+                        <p>Request restriction review</p>
+                        <button class="access-btn">Submit Appeal</button>
                     </div>
                     
-                    <div class="card girly-card" onclick="openSettings()">
-                        <div class="card-icon purple-bg">
+                    <div class="access-card" onclick="openSettings()">
+                        <div class="card-icon secondary">
                             <i class="fas fa-cog"></i>
                         </div>
-                        <h3>Sparkle Settings ✨</h3>
-                        <p>Customize your experience</p>
-                        <div class="card-sparkle">🦄</div>
+                        <h3>Preferences</h3>
+                        <p>Configure your settings</p>
+                        <button class="access-btn">Open Settings</button>
                     </div>
                 </div>
                 
-                <!-- Admin Features -->
-                <div class="admin-features" id="admin-features" style="display: none;">
-                    <h3><i class="fas fa-crown"></i> Royal Admin Features</h3>
-                    <div class="admin-buttons">
-                        <button onclick="openAllChats()" class="feature-btn pink-btn">
-                            <i class="fas fa-comments"></i> View All Chats
+                <!-- Admin Dashboard -->
+                <div class="admin-dashboard" id="admin-dashboard" style="display: none;">
+                    <h3><i class="fas fa-user-shield"></i> Administrator Console</h3>
+                    <div class="admin-tools">
+                        <button onclick="openSystemMonitor()" class="tool-btn">
+                            <i class="fas fa-desktop"></i> System Monitor
                         </button>
-                        <button onclick="openUserList()" class="feature-btn purple-btn">
-                            <i class="fas fa-users"></i> User List
+                        <button onclick="openUserManager()" class="tool-btn">
+                            <i class="fas fa-user-friends"></i> User Management
                         </button>
-                        <button onclick="openModLogs()" class="feature-btn pink-btn">
-                            <i class="fas fa-scroll"></i> Moderation Logs
+                        <button onclick="openAuditLogs()" class="tool-btn">
+                            <i class="fas fa-clipboard-list"></i> Audit Logs
+                        </button>
+                        <button onclick="openSecurityPanel()" class="tool-btn">
+                            <i class="fas fa-lock"></i> Security Settings
                         </button>
                     </div>
                 </div>
             </section>
         </main>
         
-        <!-- Ban Overlay -->
-        <div id="ban-overlay" class="ban-overlay" style="display: none;">
-            <div class="ban-message girly-card">
-                <div class="ban-header">
+        <!-- Restriction Overlay -->
+        <div id="ban-overlay" class="restriction-overlay" style="display: none;">
+            <div class="restriction-message">
+                <div class="restriction-header">
                     <i class="fas fa-lock"></i>
-                    <h2>Oops! You're Banned 🚫</h2>
+                    <h2>Access Restricted</h2>
                 </div>
-                <p>Your sparkle has been temporarily paused from this magical kingdom.</p>
-                <div class="ban-actions">
-                    <button onclick="window.location.href='appeal.html'" class="appeal-btn pink-btn">
-                        <i class="fas fa-heart"></i> Appeal Ban
+                <p>Your account access has been temporarily suspended.</p>
+                <div class="restriction-actions">
+                    <button onclick="openAppealPage()" class="action-btn appeal-btn">
+                        <i class="fas fa-file-alt"></i> Submit Appeal
                     </button>
-                    <button onclick="logout()" class="appeal-btn purple-btn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <button onclick="logout()" class="action-btn logout-action-btn">
+                        <i class="fas fa-sign-out-alt"></i> Exit System
                     </button>
                 </div>
-                <p class="ban-note">💕 Princess Ava reviews all appeals with kindness</p>
+                <p class="restriction-note">All appeals are reviewed by system administrators</p>
             </div>
         </div>
         
         <!-- Footer -->
-        <footer class="girly-footer">
+        <footer class="site-footer">
             <div class="footer-content">
-                <p>Made with 💖 by Princess Ava ✨</p>
-                <p>SparkleChat © 2024 - All the magic reserved! 🦄</p>
+                <p>© 2024 Nexus Hub - Secure Platform System</p>
                 <div class="footer-links">
-                    <a href="#"><i class="fas fa-shield-alt"></i> Safety</a>
-                    <a href="#"><i class="fas fa-heart"></i> Rules</a>
-                    <a href="#"><i class="fas fa-star"></i> Guidelines</a>
+                    <a href="#"><i class="fas fa-lock"></i> Privacy</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> Terms</a>
+                    <a href="#"><i class="fas fa-headset"></i> Support</a>
                 </div>
             </div>
         </footer>
     </div>
     
-    <!-- Chat Notification -->
-    <div id="chat-notification" class="chat-notification" style="display: none;">
-        <i class="fas fa-comment"></i>
-        <span>New message in chat!</span>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Verifying credentials...</p>
+        </div>
     </div>
     
     <script src="script.js"></script>
-    <script src="sparkles.js"></script>
 </body>
-                                    </html>
+                        </html>
