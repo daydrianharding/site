@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinematic Portfolio</title>
-    <meta name="description" content="Premium cinematic portfolio">
+    <title>Creator Portfolio</title>
+    <meta name="description" content="Visual Experience Designer">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,14 +27,17 @@
                     },
                     colors: {
                         'cinematic': {
-                            900: '#0a0a0f',
-                            800: '#12121a',
-                            gold: '#d4af37',
+                            900: '#050508',
+                            800: '#0a0a12',
+                            gold: '#e6c898',
+                            rose: '#e8b4b8',
                         }
                     },
                     animation: {
-                        'slow-zoom': 'slowZoom 30s ease-in-out infinite alternate',
+                        'slow-zoom': 'slowZoom 25s ease-in-out infinite alternate',
                         'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                        'shimmer': 'shimmer 3s linear infinite',
                     },
                     keyframes: {
                         slowZoom: {
@@ -43,7 +46,15 @@
                         },
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 40px rgba(230, 200, 152, 0.2)' },
+                            '50%': { boxShadow: '0 0 60px rgba(230, 200, 152, 0.4)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
                         }
                     }
                 }
@@ -52,60 +63,82 @@
     </script>
     
     <style>
-        /* Performance optimizations */
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
-        .reveal {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-            transition: opacity 0.8s ease, transform 0.8s ease;
+        /* Entrance Overlay */
+        #entrance-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #050508 0%, #0a0a12 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s ease, visibility 1.5s;
         }
         
-        .js-enabled .reveal {
-            opacity: 0 !important;
-            transform: translateY(30px) !important;
+        #entrance-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
         
-        .js-enabled .reveal.active {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
+        .enter-btn {
+            position: relative;
+            padding: 18px 48px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.4em;
+            color: #e6c898;
+            background: transparent;
+            border: 1px solid rgba(230, 200, 152, 0.3);
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
         }
-
-        /* Optimized grain - static instead of animated for performance */
+        
+        .enter-btn:hover {
+            background: rgba(230, 200, 152, 0.05);
+            border-color: #e6c898;
+            box-shadow: 0 0 40px rgba(230, 200, 152, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 200, 152, 0.2), transparent);
+            transition: left 0.7s;
+        }
+        
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Grain Overlay */
         .grain-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.035;
             pointer-events: none;
-            z-index: 1;
-            /* Removed animation for performance */
-            will-change: transform;
+            z-index: 5;
+            mix-blend-mode: overlay;
         }
         
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform: translateZ(0); /* Hardware acceleration */
-        }
-        
-        .social-icon {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            will-change: transform;
-        }
-        .social-icon:hover {
-            transform: scale(1.15) translateY(-5px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-        }
-        
-        #particles {
+        /* Aurora Background */
+        .aurora {
             position: fixed;
             top: 0;
             left: 0;
@@ -113,287 +146,398 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            contain: strict; /* Performance containment */
+            opacity: 0.4;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(232, 180, 184, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(230, 200, 152, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+            filter: blur(80px);
+            animation: auroraMove 25s ease infinite;
         }
         
-        .content-layer {
+        @keyframes auroraMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(20px, -20px) rotate(120deg) scale(1.1); }
+            66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Profile Container */
+        .profile-container {
             position: relative;
-            z-index: 10;
+            animation: float 6s ease-in-out infinite;
         }
         
-        .img-fallback {
-            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, #e6c898, transparent);
+            opacity: 0.2;
+            animation: spin 8s linear infinite;
+            filter: blur(8px);
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Social Icons Layout - 3 top, 2 bottom */
+        .social-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .social-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+        
+        .social-icon {
+            position: relative;
+            width: 85px;
+            height: 85px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #d4af37;
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
         }
         
-        /* Optimize animations */
-        .animate-slow-zoom, .animate-float {
-            will-change: transform;
-            backface-visibility: hidden;
+        .social-icon:hover {
+            transform: translateY(-8px) scale(1.05);
+            border-color: rgba(230, 200, 152, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(230, 200, 152, 0.15);
+        }
+        
+        .social-icon i {
+            font-size: 1.75rem;
+            transition: color 0.3s;
+        }
+        
+        /* Specific hover colors */
+        .social-icon:hover .fa-tiktok { color: #ff2d55; }
+        .social-icon:hover .fa-youtube { color: #ff0000; }
+        .social-icon:hover .fa-code { color: #60a5fa; }
+        .social-icon:hover .fa-gamepad { color: #a3a3a3; }
+        .social-icon:hover .fa-heart { color: #34d399; }
+        
+        /* Reveal Animation */
+        .reveal {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .js-enabled .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        
+        .js-enabled .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Text Effects */
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #e6c898 50%, #fff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+        
+        .subtitle-text {
+            background: linear-gradient(to right, rgba(255,255,255,0.4), rgba(230,200,152,0.6), rgba(255,255,255,0.4));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #e6c898, transparent);
+            z-index: 9999;
+            transition: width 0.1s;
+            box-shadow: 0 0 10px rgba(230, 200, 152, 0.5);
+        }
+        
+        /* Hide YouTube */
+        #yt-player {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .social-icon {
+                width: 70px;
+                height: 70px;
+            }
+            .social-icon i {
+                font-size: 1.5rem;
+            }
+            .social-row {
+                gap: 1rem;
+            }
+        }
+        
+        /* Elegant divider */
+        .elegant-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .elegant-divider::before,
+        .elegant-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(230, 200, 152, 0.3), transparent);
+        }
+        
+        .elegant-divider i {
+            color: rgba(230, 200, 152, 0.4);
+            font-size: 0.6rem;
         }
     </style>
 </head>
-<body class="bg-cinematic-900 text-white font-inter antialiased">
-    
-    <script>document.documentElement.classList.add('js-enabled');</script>
+<body class="bg-cinematic-900 text-white font-inter antialiased overflow-x-hidden">
 
-    <!-- Static Grain (Better Performance) -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="aurora"></div>
     <div class="grain-overlay"></div>
-    
-    <!-- Particles -->
-    <canvas id="particles"></canvas>
+    <div id="yt-player"></div>
 
-    <!-- Audio: Replace this with your own hosted MP3 file -->
-    <!-- NOTE: You cannot use YouTube URLs directly. Download the audio from YouTube and upload it as an MP3 -->
-    <audio id="ambientAudio" loop preload="none">
-        <source src="your-audio-file.mp3" type="audio/mpeg">
-    </audio>
-
-    <button id="audioToggle" class="fixed top-6 right-6 z-50 glass rounded-full p-4 text-cinematic-gold hover:bg-white/10 transition-all" aria-label="Toggle music">
-        <i class="fas fa-volume-mute text-xl" id="audioIcon"></i>
-    </button>
-
-    <!-- HERO SECTION -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden content-layer">
-        
-        <!-- Background -->
-        <div class="absolute inset-0 z-0">
-            <div id="heroBg" class="absolute inset-0 bg-cover bg-center animate-slow-zoom" 
-                 style="background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80');">
+    <!-- Entrance Overlay -->
+    <div id="entrance-overlay">
+        <div class="text-center px-4">
+            <div class="mb-8 text-cinematic-gold/60 text-4xl tracking-[0.5em] uppercase font-cinzel text-sm">
+                Welcome
             </div>
-            <div class="absolute inset-0 bg-gradient-to-b from-cinematic-900/70 via-cinematic-900/50 to-cinematic-900"></div>
+            <button class="enter-btn" id="enterBtn">
+                Enter
+            </button>
+            <p class="mt-8 text-white/20 text-[10px] tracking-[0.4em] uppercase">
+                Click to Begin Experience
+            </p>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0" id="parallax-bg">
+            <div id="heroBg" class="absolute inset-0 bg-cover bg-center animate-slow-zoom scale-110" 
+                 style="background-image: url('https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80'); filter: brightness(0.6) contrast(1.1);">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-cinematic-900/90 via-cinematic-900/50 to-cinematic-900"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-cinematic-900/80 via-transparent to-cinematic-900/80"></div>
         </div>
 
-        <!-- Content -->
-        <div class="relative z-20 text-center px-4 max-w-4xl mx-auto">
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
             
             <!-- Profile -->
-            <div class="mb-8 reveal" data-delay="0">
-                <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-2 border-cinematic-gold/30 shadow-2xl animate-float glass">
-                    <img id="profileImg" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" 
-                         alt="Profile" 
-                         class="w-full h-full object-cover"
-                         onerror="this.style.display='none'; this.parentElement.classList.add('img-fallback'); this.parentElement.innerHTML='<i class=\'fas fa-user text-4xl\'></i>';">
+            <div class="mb-12 reveal">
+                <div class="profile-container w-48 h-48 mx-auto">
+                    <div class="absolute inset-0 rounded-full bg-cinematic-gold/20 blur-3xl animate-pulse-glow"></div>
+                    <div class="relative w-full h-full rounded-full overflow-hidden border border-white/10 glass p-1">
+                        <img id="profileImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80" 
+                             alt="Profile" 
+                             class="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-700">
+                    </div>
                 </div>
             </div>
 
-            <!-- Text -->
-            <div class="space-y-4 reveal" data-delay="100">
-                <h1 class="font-cinzel text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 tracking-wider drop-shadow-lg">
+            <!-- Title -->
+            <div class="space-y-4 reveal" data-delay="200">
+                <h1 class="font-cinzel text-6xl md:text-8xl font-bold tracking-wider scramble-text gradient-text" id="mainTitle">
                     CREATOR
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-300 font-light tracking-[0.2em] uppercase">
+                <p class="text-base md:text-lg subtitle-text font-light tracking-[0.3em] uppercase">
                     Visual Experience Designer
                 </p>
             </div>
 
-            <!-- Scroll indicator -->
-            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce reveal" data-delay="200">
-                <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-                    <div class="w-1 h-2 bg-cinematic-gold rounded-full animate-pulse"></div>
-                </div>
+            <!-- Decorative Line -->
+            <div class="mt-12 reveal" data-delay="400">
+                <div class="w-px h-16 bg-gradient-to-b from-cinematic-gold/50 to-transparent mx-auto"></div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 reveal" data-delay="600">
+            <div class="flex flex-col items-center gap-3 opacity-40">
+                <span class="text-[9px] tracking-[0.4em] uppercase font-cinzel">Scroll</span>
+                <div class="w-px h-8 bg-gradient-to-b from-white to-transparent"></div>
             </div>
         </div>
     </section>
 
-    <!-- SOCIAL SECTION -->
-    <section class="relative py-32 px-4 content-layer bg-cinematic-900">
-        <div class="max-w-4xl mx-auto text-center">
+    <!-- Social Section -->
+    <section class="relative py-28 px-4 bg-cinematic-900/80 backdrop-blur-sm">
+        <div class="max-w-2xl mx-auto text-center">
             
             <div class="mb-16 reveal">
-                <h2 class="font-cinzel text-4xl text-white mb-4">Connect</h2>
-                <div class="w-24 h-0.5 bg-cinematic-gold mx-auto"></div>
+                <h2 class="font-cinzel text-4xl md:text-5xl text-white mb-4 tracking-wider">Connect</h2>
+                <div class="elegant-divider">
+                    <i class="fas fa-diamond"></i>
+                </div>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-8 reveal" data-delay="100">
+            <!-- 3-2 Layout -->
+            <div class="social-wrapper reveal" data-delay="200">
                 
-                <!-- TikTok -->
-                <a href="https://tiktok.com/@aavauz" target="_blank" rel="noopener noreferrer" 
-                   class="social-icon glass p-6 rounded-2xl text-white hover:text-pink-500 hover:border-pink-500/50 border border-white/10"
-                   aria-label="TikTok">
-                    <i class="fab fa-tiktok text-3xl"></i>
-                </a>
+                <!-- Top Row: 3 Icons -->
+                <div class="social-row">
+                    <a href="https://tiktok.com/@aavauz" target="_blank" rel="noopener" 
+                       class="social-icon" aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
 
-                <!-- YouTube -->
-                <a href="https://youtube.com/@Avaauz" target="_blank" rel="noopener noreferrer" 
-                   class="social-icon glass p-6 rounded-2xl text-white hover:text-red-600 hover:border-red-600/50 border border-white/10"
-                   aria-label="YouTube">
-                    <i class="fab fa-youtube text-3xl"></i>
-                </a>
+                    <a href="https://youtube.com/@Avaauz" target="_blank" rel="noopener" 
+                       class="social-icon" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
 
-                <!-- ScriptBlox -->
-                <a href="https://scriptblox.com/u/Aava" target="_blank" rel="noopener noreferrer" 
-                   class="social-icon glass p-6 rounded-2xl text-white hover:text-blue-500 hover:border-blue-500/50 border border-white/10"
-                   aria-label="ScriptBlox">
-                    <i class="fas fa-code text-3xl"></i>
-                </a>
+                    <a href="https://scriptblox.com/u/Aava" target="_blank" rel="noopener" 
+                       class="social-icon" aria-label="ScriptBlox">
+                        <i class="fas fa-code"></i>
+                    </a>
+                </div>
 
-                <!-- Roblox -->
-                <a href="https://www.roblox.com/communities/1070600773/Aavs#!/about" target="_blank" rel="noopener noreferrer" 
-                   class="social-icon glass p-6 rounded-2xl text-white hover:text-gray-400 hover:border-gray-400/50 border border-white/10"
-                   aria-label="Roblox Group">
-                    <i class="fas fa-gamepad text-3xl"></i>
-                </a>
+                <!-- Bottom Row: 2 Icons -->
+                <div class="social-row">
+                    <a href="https://www.roblox.com/communities/1070600773/Aavs#!/about" target="_blank" rel="noopener" 
+                       class="social-icon" aria-label="Roblox Group">
+                        <i class="fas fa-gamepad"></i>
+                    </a>
 
-                <!-- Support -->
-                <a href="https://avabug.lovable.app" target="_blank" rel="noopener noreferrer" 
-                   class="social-icon glass p-6 rounded-2xl text-white hover:text-green-500 hover:border-green-500/50 border border-white/10"
-                   aria-label="Support">
-                    <i class="fas fa-heart text-3xl"></i>
-                </a>
+                    <a href="https://avabug.lovable.app" target="_blank" rel="noopener" 
+                       class="social-icon" aria-label="Support">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                </div>
 
             </div>
         </div>
     </section>
 
-    <footer class="relative py-8 text-center text-gray-600 text-sm content-layer bg-cinematic-900 border-t border-white/5">
-        <p>&copy; 2026</p>
+    <footer class="relative py-10 text-center text-white/20 text-[10px] tracking-[0.2em] uppercase border-t border-white/5 bg-cinematic-900">
+        <p>&copy; 2026 Creator Portfolio</p>
     </footer>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
     <script>
-        // CONFIG
         const CONFIG = {
-            bgImage: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80',
-            profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
-            // IMPORTANT: Replace with your own MP3 file URL. YouTube links won't work directly.
-            audioFile: 'your-audio-file.mp3' 
+            bgImage: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80',
+            profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
+            youtubeId: 'Dzpz1DrSVMU',
         };
 
-        // Apply images
         document.getElementById('heroBg').style.backgroundImage = `url('${CONFIG.bgImage}')`;
         document.getElementById('profileImg').src = CONFIG.profileImage;
-        
-        // Only set audio if file exists
-        const audioEl = document.querySelector('#ambientAudio source');
-        if(audioEl && CONFIG.audioFile !== 'your-audio-file.mp3') {
-            audioEl.src = CONFIG.audioFile;
-        }
 
-        // AUDIO CONTROL
-        const audio = document.getElementById('ambientAudio');
-        const toggle = document.getElementById('audioToggle');
-        const icon = document.getElementById('audioIcon');
-        let playing = false;
-
-        toggle.addEventListener('click', async () => {
-            try {
-                if (playing) {
-                    audio.pause();
-                    icon.className = 'fas fa-volume-mute text-xl';
-                    toggle.classList.remove('ring-2', 'ring-cinematic-gold');
-                } else {
-                    // Load audio only on first click if not loaded
-                    if(audio.readyState === 0) audio.load();
-                    await audio.play();
-                    icon.className = 'fas fa-volume-up text-xl';
-                    toggle.classList.add('ring-2', 'ring-cinematic-gold');
+        // YouTube Player
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                height: '0',
+                width: '0',
+                videoId: CONFIG.youtubeId,
+                playerVars: {
+                    autoplay: 0,
+                    loop: 1,
+                    playlist: CONFIG.youtubeId,
+                    controls: 0,
+                    showinfo: 0,
+                    modestbranding: 1,
+                    rel: 0,
+                    iv_load_policy: 3,
+                    fs: 0,
+                },
+                events: {
+                    onReady: (e) => {
+                        player.setVolume(40);
+                    }
                 }
-                playing = !playing;
-            } catch(e) {
-                console.error('Audio error:', e);
-                alert('Audio file not found. Please add your MP3 file.');
-            }
-        });
-
-        // OPTIMIZED PARTICLES (Lag Fix)
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d', { alpha: true }); // Alpha for transparency
-        let particles = [];
-        let animationId = null;
-        let isVisible = true;
-        let frameCount = 0;
-        
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize, { passive: true });
-
-        // Reduced to 25 particles for performance
-        for(let i = 0; i < 25; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 1.5 + 0.5,
-                d: Math.random() * Math.PI * 2,
-                s: Math.random() * 0.3 + 0.1
             });
         }
 
-        function animate() {
-            if (!isVisible) {
-                animationId = requestAnimationFrame(animate);
-                return;
-            }
-            
-            // Skip every other frame (30fps instead of 60fps) for performance
-            frameCount++;
-            if (frameCount % 2 !== 0) {
-                animationId = requestAnimationFrame(animate);
-                return;
-            }
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
-            
-            particles.forEach(p => {
-                p.x += Math.cos(p.d) * p.s;
-                p.y += Math.sin(p.d) * p.s;
-                
-                // Wrap around screen instead of bounce (cheaper calculation)
-                if (p.x < 0) p.x = canvas.width;
-                if (p.x > canvas.width) p.x = 0;
-                if (p.y < 0) p.y = canvas.height;
-                if (p.y > canvas.height) p.y = 0;
-                
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fill();
-            });
-            
-            animationId = requestAnimationFrame(animate);
-        }
+        // Entrance
+        const overlay = document.getElementById('entrance-overlay');
+        const enterBtn = document.getElementById('enterBtn');
         
-        // Start animation
-        animate();
+        function startExperience() {
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            
+            if (player && player.playVideo) {
+                player.playVideo();
+            } else {
+                setTimeout(() => player && player.playVideo(), 1000);
+            }
+            
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                setTimeout(() => el.classList.add('active'), i * 150);
+            });
+        }
 
-        // CRITICAL: Pause when tab is hidden to save resources
-        document.addEventListener('visibilitychange', () => {
-            isVisible = !document.hidden;
+        enterBtn.addEventListener('click', startExperience);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) startExperience();
         });
 
-        // REVEAL ANIMATION
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + "%";
+        }, { passive: true });
 
+        // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const delay = entry.target.dataset.delay || 0;
-                    setTimeout(() => {
-                        entry.target.classList.add('active');
-                    }, delay);
+                    setTimeout(() => entry.target.classList.add('active'), 
+                              parseInt(entry.target.dataset.delay) || 0);
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.reveal').forEach(el => {
-            observer.observe(el);
-        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Fallback
-        setTimeout(() => {
-            document.querySelectorAll('.reveal').forEach(el => {
-                el.classList.add('active');
-            });
-        }, 3000);
-    </script>
-</body>
-</html>
+        // Text Scramble
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________';
+    
