@@ -68,22 +68,32 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Entrance Overlay */
+        /* CRITICAL FIX: Entrance Overlay with !important and display handling */
         #entrance-overlay {
             position: fixed;
             inset: 0;
             background: linear-gradient(135deg, #050508 0%, #0a0a12 100%);
             z-index: 9999;
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
-            transition: opacity 1.5s ease, visibility 1.5s;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+            pointer-events: auto;
         }
         
-        #entrance-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+        /* Force hide with multiple methods */
+        #entrance-overlay.hide {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            z-index: -1 !important;
+        }
+        
+        /* Completely remove after animation */
+        #entrance-overlay.removed {
+            display: none !important;
         }
         
         .enter-btn {
@@ -99,6 +109,7 @@
             overflow: hidden;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
+            pointer-events: auto;
         }
         
         .enter-btn:hover {
@@ -279,7 +290,7 @@
             left: 0;
             height: 2px;
             background: linear-gradient(90deg, #e6c898, transparent);
-            z-index: 9999;
+            z-index: 9998;
             transition: width 0.1s;
             box-shadow: 0 0 10px rgba(230, 200, 152, 0.5);
         }
@@ -292,6 +303,7 @@
             width: 0;
             height: 0;
             overflow: hidden;
+            z-index: -999;
         }
         
         /* Responsive */
@@ -328,9 +340,14 @@
             color: rgba(230, 200, 152, 0.4);
             font-size: 0.6rem;
         }
+        
+        /* Prevent scrolling when overlay is open */
+        body.overlay-open {
+            overflow: hidden;
+        }
     </style>
 </head>
-<body class="bg-cinematic-900 text-white font-inter antialiased overflow-x-hidden">
+<body class="bg-cinematic-900 text-white font-inter antialiased overflow-x-hidden overlay-open">
 
     <div class="scroll-progress" id="scrollProgress"></div>
     <div class="aurora"></div>
@@ -457,18 +474,21 @@
     <script src="https://www.youtube.com/iframe_api"></script>
     
     <script>
+        // Configuration
         const CONFIG = {
             bgImage: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80',
             profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
             youtubeId: 'Dzpz1DrSVMU',
         };
 
+        // Set images
         document.getElementById('heroBg').style.backgroundImage = `url('${CONFIG.bgImage}')`;
         document.getElementById('profileImg').src = CONFIG.profileImage;
 
         // YouTube Player
         let player;
         function onYouTubeIframeAPIReady() {
+            console.log('YouTube API Ready');
             player = new YT.Player('yt-player', {
                 height: '0',
                 width: '0',
@@ -483,61 +503,43 @@
                     rel: 0,
                     iv_load_policy: 3,
                     fs: 0,
+                    vq: 'tiny'
                 },
                 events: {
                     onReady: (e) => {
-                        player.setVolume(40);
+                        console.log('Player Ready');
+                        player.setVolume(35);
+                    },
+                    onError: (e) => {
+                        console.error('YouTube Error:', e.data);
                     }
                 }
             });
         }
 
-        // Entrance
+        // Entrance Handler - ROBUST VERSION
         const overlay = document.getElementById('entrance-overlay');
         const enterBtn = document.getElementById('enterBtn');
+        const body = document.body;
         
         function startExperience() {
-            overlay.classList.add('hidden');
-            document.body.style.overflow = 'auto';
+            console.log('Starting experience...');
             
+            // Play audio
             if (player && player.playVideo) {
-                player.playVideo();
+                try {
+                    player.playVideo();
+                    console.log('Playing video');
+                } catch(e) {
+                    console.error('Play error:', e);
+                }
             } else {
-                setTimeout(() => player && player.playVideo(), 1000);
+                console.log('Player not ready, retrying...');
+                setTimeout(() => {
+                    if (player && player.playVideo) player.playVideo();
+                }, 1500);
             }
             
-            document.querySelectorAll('.reveal').forEach((el, i) => {
-                setTimeout(() => el.classList.add('active'), i * 150);
-            });
-        }
-
-        enterBtn.addEventListener('click', startExperience);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) startExperience();
-        });
-
-        // Scroll Progress
-        window.addEventListener('scroll', () => {
-            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            document.getElementById('scrollProgress').style.width = scrolled + "%";
-        }, { passive: true });
-
-        // Intersection Observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('active'), 
-                              parseInt(entry.target.dataset.delay) || 0);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Text Scramble
-        class TextScramble {
-            constructor(el) {
-                this.el = el;
-                this.chars = '!<>-_\\/[]{}—=+*^?#________';
-    
+            // Add hide class for transition
+            overlay.classList.add('hide');
+       
