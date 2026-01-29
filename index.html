@@ -1,14 +1,14 @@
-  <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creator Portfolio</title>
+    <title>Aava | Creator</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,27 +19,39 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        'cinzel': ['Cinzel', 'serif'],
-                        'inter': ['Inter', 'sans-serif'],
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Montserrat', 'sans-serif'],
                     },
                     colors: {
-                        'cinematic': {
-                            900: '#050508',
-                            gold: '#e6c898',
+                        'rose': {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            gold: '#d4af37',
+                            champagne: '#f7e7ce',
                         }
                     },
                     animation: {
-                        'slow-zoom': 'slowZoom 25s ease-in-out infinite alternate',
                         'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 3s linear infinite',
+                        'sparkle': 'sparkle 2s ease-in-out infinite',
                     },
                     keyframes: {
-                        slowZoom: {
-                            '0%': { transform: 'scale(1)' },
-                            '100%': { transform: 'scale(1.1)' },
-                        },
                         float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' },
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        },
+                        sparkle: {
+                            '0%, 100%': { opacity: 0, transform: 'scale(0)' },
+                            '50%': { opacity: 1, transform: 'scale(1)' },
                         }
                     }
                 }
@@ -48,188 +60,355 @@
     </script>
     
     <style>
-        * { -webkit-font-smoothing: antialiased; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        .grain {
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a0f1f 0%, #2d1f2f 50%, #1a0f1f 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Stars Background */
+        .stars {
             position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.03;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            z-index: 5;
-        }
-        
-        .aurora {
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(232, 180, 184, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(230, 200, 152, 0.1) 0%, transparent 50%);
-            filter: blur(80px);
             z-index: 0;
-            animation: move 25s infinite;
         }
         
-        @keyframes move {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(10deg); }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: 0;
         }
         
-        .glass {
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--opacity); transform: scale(1); }
+        }
+        
+        /* Glass Card */
+        .glass-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                        inset 0 0 20px rgba(255, 255, 255, 0.02);
         }
         
+        /* Profile Image Container */
+        .profile-glow {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+        }
+        
+        .profile-glow::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+            filter: blur(20px);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        .profile-glow::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Gradient Text */
         .gradient-text {
-            background: linear-gradient(to bottom, #fff, #e6c898);
+            background: linear-gradient(135deg, #fff 0%, #f7e7ce 50%, #fff 100%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shimmer 5s linear infinite;
         }
         
-        #yt-player {
+        /* Social Icons */
+        .social-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .social-row {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .social-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.75rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-btn::before {
+            content: '';
             position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 70%);
             opacity: 0;
-            width: 0;
-            height: 0;
+            transition: opacity 0.3s;
         }
         
-        /* Floating audio button for fallback */
-        .audio-btn {
+        .social-btn:hover {
+            transform: translateY(-8px) scale(1.05);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+        
+        .social-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .social-btn:hover .fa-tiktok { color: #ff2d55; }
+        .social-btn:hover .fa-youtube { color: #ff0000; }
+        .social-btn:hover .fa-code { color: #60a5fa; }
+        .social-btn:hover .fa-gamepad { color: #a3a3a3; }
+        .social-btn:hover .fa-heart { color: #34d399; }
+        
+        /* Audio Button */
+        .audio-control {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: rgba(230, 200, 152, 0.1);
-            border: 1px solid rgba(230, 200, 152, 0.3);
-            color: #e6c898;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 100;
             transition: all 0.3s;
-            opacity: 0;
-            visibility: hidden;
+            z-index: 100;
+            font-size: 1.25rem;
         }
         
-        .audio-btn.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .audio-btn:hover {
-            background: rgba(230, 200, 152, 0.2);
+        .audio-control:hover {
+            background: rgba(212, 175, 55, 0.2);
             transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
         }
         
-        .audio-btn.playing {
-            animation: pulse 2s infinite;
+        .audio-control.playing {
+            animation: pulse-ring 2s infinite;
         }
         
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(230, 200, 152, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(230, 200, 152, 0); }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+        
+        /* Decorative Elements */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .divider-line {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+        }
+        
+        .divider-icon {
+            color: rgba(212, 175, 55, 0.6);
+            font-size: 0.5rem;
+        }
+        
+        /* Section transitions */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .profile-glow {
+                width: 220px;
+                height: 220px;
+            }
+            .social-btn {
+                width: 75px;
+                height: 75px;
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
-<body class="bg-[#050508] text-white font-[Inter]">
+<body>
 
-    <div class="grain"></div>
-    <div class="aurora"></div>
-    <div id="yt-player"></div>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
     
-    <!-- Audio fallback button (appears if autoplay blocked) -->
-    <button id="audioBtn" class="audio-btn" onclick="toggleAudio()" title="Play Music">
+    <!-- YouTube Audio -->
+    <div id="yt-player" style="position:fixed;opacity:0;width:0;height:0;bottom:0;right:0;z-index:-1;"></div>
+    
+    <!-- Audio Control -->
+    <button id="audioBtn" class="audio-control" onclick="toggleAudio()" title="Play Music">
         <i class="fas fa-play" id="audioIcon"></i>
     </button>
 
-    <!-- Hero -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-cover bg-center animate-slow-zoom scale-110" 
-                 style="background-image: url('https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80'); filter: brightness(0.6);">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-b from-[#050508]/90 via-[#050508]/50 to-[#050508]"></div>
-        </div>
-
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
-            <div class="mb-10 animate-float">
-                <div class="relative w-44 h-44 mx-auto rounded-full overflow-hidden border border-white/10 glass p-1">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80" 
-                         alt="Profile" class="w-full h-full object-cover rounded-full hover:scale-110 transition duration-700">
-                </div>
-            </div>
-
-            <h1 class="font-[Cinzel] text-6xl md:text-8xl font-bold tracking-wider gradient-text mb-4">
-                CREATOR
-            </h1>
-            <p class="text-gray-400 text-sm md:text-base tracking-[0.3em] uppercase">
-                Visual Experience Designer
-            </p>
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center px-4 py-20">
+        <div class="max-w-2xl w-full text-center relative z-10">
             
-            <div class="mt-12 w-px h-16 bg-gradient-to-b from-[#e6c898]/50 to-transparent mx-auto"></div>
-        </div>
-    </section>
-
-    <!-- Social 3-2 -->
-    <section class="py-24 px-4 bg-[#050508] relative z-10">
-        <div class="max-w-2xl mx-auto text-center">
-            <h2 class="font-[Cinzel] text-4xl mb-2">Connect</h2>
-            <div class="flex items-center justify-center gap-4 mb-12 opacity-30">
-                <div class="h-px w-12 bg-[#e6c898]"></div>
-                <i class="fas fa-diamond text-xs text-[#e6c898]"></i>
-                <div class="h-px w-12 bg-[#e6c898]"></div>
+            <!-- Profile Image -->
+            <div class="profile-glow mb-12 fade-in">
+                <div class="relative w-full h-full rounded-full overflow-hidden glass-card p-1">
+                    <img src="https://scriptblox.com/images/script/0-1768512069922.jpg" 
+                         alt="Aava" 
+                         class="w-full h-full object-cover rounded-full"
+                         onerror="this.onerror=null; this.src='https://i.imgur.com/placeholder.png';">
+                </div>
             </div>
-            
-            <div class="flex flex-col gap-6">
-                <!-- Top: 3 -->
-                <div class="flex justify-center gap-4 flex-wrap">
-                    <a href="https://tiktok.com/@aavauz" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#ff2d55]">
-                        <i class="fab fa-tiktok text-2xl"></i>
-                    </a>
-                    <a href="https://m.youtube.com/@Avaauz" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#ff0000]">
-                        <i class="fab fa-youtube text-2xl"></i>
-                    </a>
-                    <a href="https://scriptblox.com/u/Aava" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#60a5fa]">
-                        <i class="fas fa-code text-2xl"></i>
-                    </a>
+
+            <!-- Name -->
+            <div class="fade-in" style="transition-delay: 0.2s;">
+                <h1 class="font-display text-7xl md:text-9xl font-semibold italic gradient-text mb-4 tracking-wide">
+                    Aava
+                </h1>
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <i class="fas fa-gem divider-icon"></i>
+                    <div class="divider-line"></div>
                 </div>
-                <!-- Bottom: 2 -->
-                <div class="flex justify-center gap-4 flex-wrap">
-                    <a href="https://www.roblox.com/communities/1070600773/Aavs#!/about" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-gray-400">
-                        <i class="fas fa-gamepad text-2xl"></i>
-                    </a>
-                    <a href="https://avabug.lovable.app" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#34d399]">
-                        <i class="fas fa-heart text-2xl"></i>
-                    </a>
-                </div>
+                <p class="font-body text-rose-200/80 text-sm md:text-base tracking-[0.3em] uppercase mt-6 font-light">
+                    Creator & Designer
+                </p>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 fade-in" style="transition-delay: 0.4s;">
+                <div class="w-px h-16 bg-gradient-to-b from-rose-gold/50 to-transparent animate-pulse"></div>
             </div>
         </div>
     </section>
 
-    <footer class="py-8 text-center text-white/20 text-xs tracking-widest uppercase border-t border-white/5 relative z-10">
-        <p>&copy; 2026 Portfolio</p>
+    <!-- Connect Section -->
+    <section class="relative py-24 px-4">
+        <div class="max-w-3xl mx-auto text-center relative z-10">
+            
+            <div class="fade-in mb-16">
+                <h2 class="font-display text-5xl md:text-6xl text-white mb-4 italic">Connect</h2>
+                <div class="divider">
+                    <div class="divider-line" style="width: 100px;"></div>
+                </div>
+            </div>
+
+            <div class="social-container fade-in" style="transition-delay: 0.2s;">
+                <!-- Top Row: 3 -->
+                <div class="social-row">
+                    <a href="https://tiktok.com/@aavauz" target="_blank" class="social-btn" aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://m.youtube.com/@Avaauz" target="_blank" class="social-btn" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://scriptblox.com/u/Aava" target="_blank" class="social-btn" aria-label="ScriptBlox">
+                        <i class="fas fa-code"></i>
+                    </a>
+                </div>
+                
+                <!-- Bottom Row: 2 -->
+                <div class="social-row">
+                    <a href="https://www.roblox.com/communities/1070600773/Aavs#!/about" target="_blank" class="social-btn" aria-label="Roblox">
+                        <i class="fas fa-gamepad"></i>
+                    </a>
+                    <a href="https://avabug.lovable.app" target="_blank" class="social-btn" aria-label="Support">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative py-12 text-center border-t border-white/5 relative z-10">
+        <p class="font-body text-white/20 text-xs tracking-[0.3em] uppercase">
+            &copy; 2026 Aava. All Rights Reserved.
+        </p>
     </footer>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        // Create Stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+            star.style.setProperty('--opacity', Math.random() * 0.7 + 0.3);
+            starsContainer.appendChild(star);
+        }
+
+        // YouTube Audio
         const CONFIG = {
             youtubeId: 'Dzpz1DrSVMU',
         };
 
         let player;
         let isPlaying = false;
-        let autoplayFailed = false;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
                 videoId: CONFIG.youtubeId,
                 playerVars: {
-                    autoplay: 1, // Try autoplay immediately
+                    autoplay: 0,
                     loop: 1,
                     playlist: CONFIG.youtubeId,
                     controls: 0,
@@ -237,52 +416,28 @@
                     modestbranding: 1,
                     rel: 0,
                     iv_load_policy: 3,
-                    fs: 0,
                 },
                 events: {
-                    onReady: onPlayerReady,
-                    onStateChange: onPlayerStateChange,
-                    onError: onPlayerError
+                    onReady: (e) => {
+                        player.setVolume(40);
+                        // Show play button since autoplay is blocked
+                        document.getElementById('audioBtn').style.opacity = '1';
+                    },
+                    onStateChange: (e) => {
+                        if (e.data === YT.PlayerState.PLAYING) {
+                            isPlaying = true;
+                            document.getElementById('audioBtn').classList.add('playing');
+                            document.getElementById('audioIcon').className = 'fas fa-pause';
+                        } else if (e.data === YT.PlayerState.PAUSED) {
+                            isPlaying = false;
+                            document.getElementById('audioBtn').classList.remove('playing');
+                            document.getElementById('audioIcon').className = 'fas fa-play';
+                        } else if (e.data === YT.PlayerState.ENDED) {
+                            player.playVideo();
+                        }
+                    }
                 }
             });
-        }
-
-        function onPlayerReady(event) {
-            player.setVolume(35);
-            
-            // Try to play immediately
-            event.target.playVideo();
-            
-            // Check if actually playing after 2 seconds
-            setTimeout(() => {
-                const state = player.getPlayerState();
-                console.log('Player state:', state); // 1 = playing, -1 = unstarted, 3 = buffering
-                
-                if (state !== 1 && state !== 3) {
-                    // Autoplay blocked
-                    console.log('Autoplay blocked by browser');
-                    autoplayFailed = true;
-                    document.getElementById('audioBtn').classList.add('show');
-                }
-            }, 2000);
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                isPlaying = true;
-                autoplayFailed = false;
-                const btn = document.getElementById('audioBtn');
-                btn.classList.add('playing');
-                btn.classList.remove('show'); // Hide if it was showing
-                document.getElementById('audioIcon').className = 'fas fa-music';
-            } else if (event.data === YT.PlayerState.ENDED) {
-                player.playVideo(); // Loop
-            }
-        }
-
-        function onPlayerError(event) {
-            console.error('YouTube error:', event.data);
-            document.getElementById('audioBtn').classList.add('show');
         }
 
         function toggleAudio() {
@@ -290,21 +445,29 @@
             
             if (isPlaying) {
                 player.pauseVideo();
-                document.getElementById('audioIcon').className = 'fas fa-play';
-                document.getElementById('audioBtn').classList.remove('playing');
             } else {
                 player.playVideo();
-                document.getElementById('audioIcon').className = 'fas fa-pause';
             }
-            isPlaying = !isPlaying;
         }
 
-        // Fallback: If user clicks anywhere on page and audio isn't playing, try to start
+        // Intersection Observer for fade-ins
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Try autoplay on first interaction
         document.addEventListener('click', () => {
-            if (autoplayFailed && player && player.playVideo && !isPlaying) {
+            if (!isPlaying && player && player.playVideo) {
                 player.playVideo();
             }
         }, { once: true });
     </script>
 </body>
-                        </html>
+  </html>
