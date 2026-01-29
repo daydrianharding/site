@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Portfolio</title>
+    <meta name="description" content="Premium cinematic portfolio with ambient audio and visual effects">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'cinematic': {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a2e',
+                            600: '#252542',
+                            gold: '#d4af37',
+                            accent: '#6366f1'
+                        }
+                    },
+                    animation: {
+                        'slow-zoom': 'slowZoom 20s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'grain': 'grain 8s steps(10) infinite',
+                    },
+                    keyframes: {
+                        slowZoom: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' },
+                            '50%': { boxShadow: '0 0 40px rgba(212, 175, 55, 0.6)' },
+                        },
+                        grain: {
+                            '0%, 100%': { transform: 'translate(0, 0)' },
+                            '10%': { transform: 'translate(-5%, -10%)' },
+                            '20%': { transform: 'translate(-15%, 5%)' },
+                            '30%': { transform: 'translate(7%, -25%)' },
+                            '40%': { transform: 'translate(-5%, 25%)' },
+                            '50%': { transform: 'translate(-15%, 10%)' },
+                            '60%': { transform: 'translate(15%, 0%)' },
+                            '70%': { transform: 'translate(0%, 15%)' },
+                            '80%': { transform: 'translate(3%, 35%)' },
+                            '90%': { transform: 'translate(-10%, 10%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+        
+        /* Cinematic Grain Overlay */
+        .grain-overlay {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            width: 200%;
+            height: 200%;
+            background: transparent url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>') repeat;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 50;
+            animation: grain 8s steps(10) infinite;
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Audio Control Pulse */
+        .audio-pulse {
+            animation: audioPulse 2s ease-in-out infinite;
+        }
+        @keyframes audioPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        /* Parallax Container */
+        .parallax-container {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        /* Smooth reveal animation classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Icon Hover Effects */
+        .social-icon {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .social-icon:hover {
+            transform: scale(1.2) translateY(-5px);
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+        
+        /* Ambient Light Effect */
+        .ambient-light {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Particle Canvas */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-cinematic-900 text-white font-inter overflow-x-hidden selection:bg-cinematic-gold selection:text-cinematic-900">
+
+    <!-- Cinematic Grain Overlay -->
+    <div class="grain-overlay"></div>
+    
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+    
+    <!-- Ambient Light Effects -->
+    <div class="ambient-light top-0 left-1/4 animate-pulse"></div>
+    <div class="ambient-light bottom-0 right-1/4 animate-pulse" style="animation-delay: 2s;"></div>
+
+    <!-- Audio Element (Hidden) -->
+    <!-- REPLACE: src with your audio file URL -->
+    <audio id="ambientAudio" loop preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- Fallback for other formats -->
+        <source src="your-audio.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- Audio Control -->
+    <div class="fixed top-6 right-6 z-50 flex items-center gap-3">
+        <button id="audioToggle" class="glass rounded-full p-3 text-cinematic-gold hover:bg-white/10 transition-all duration-300 group audio-pulse" aria-label="Toggle ambient music">
+            <i class="fas fa-volume-mute text-lg" id="audioIcon"></i>
+        </button>
+        <div class="hidden md:flex items-center gap-2 glass px-4 py-2 rounded-full text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span class="w-2 h-2 bg-cinematic-gold rounded-full animate-pulse"></span>
+            Ambient Sound
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen w-full overflow-hidden flex items-center justify-center parallax-container">
+        
+        <!-- Background Layer -->
+        <div class="absolute inset-0 z-0">
+            <!-- REPLACE: Background Image URL below -->
+            <div id="heroBackground" class="absolute inset-0 bg-cover bg-center animate-slow-zoom" 
+                 style="background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80');">
+            </div>
+            
+            <!-- Gradient Overlay for text readability -->
+            <div class="absolute inset-0 bg-gradient-to-b from-cinematic-900/60 via-cinematic-900/40 to-cinematic-900"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-cinematic-900/50 to-transparent"></div>
+        </div>
+
+        <!-- Foreground Content -->
+        <div class="relative z-20 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
+            
+            <!-- Profile Image Container -->
+            <div class="relative mb-8 reveal">
+                <!-- Glow Effect Behind -->
+                <div class="absolute inset-0 bg-cinematic-gold/30 rounded-full blur-3xl animate-pulse-glow"></div>
+                
+                <!-- REPLACE: Profile Image URL below -->
+                <div class="relative w-40 h-40 sm:w-56 sm:h-56 rounded-full overflow-hidden border-2 border-white/20 shadow-2xl animate-float glass">
+                    <img id="profileImage" 
+                         src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" 
+                         alt="Profile" 
+                         class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+            </div>
+
+            <!-- Text Content -->
+            <div class="space-y-4 reveal" style="transition-delay: 0.2s;">
+                <h1 class="font-cinzel text-5xl sm:text-7xl md:text-8xl font-semibold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 tracking-wider drop-shadow-2xl">
+                    CREATOR
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-300 font-light tracking-[0.3em] uppercase">
+                    Visual Experience Designer
+                </p>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce reveal" style="transition-delay: 0.4s;">
+                <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+                    <div class="w-1 h-2 bg-cinematic-gold rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Links Section -->
+    <section class="relative z-20 min-h-[50vh] flex items-center justify-center py-20 px-4">
+        <div class="max-w-4xl w-full">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-cinzel text-3xl sm:text-4xl text-white mb-4">Connect</h2>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-cinematic-gold to-transparent mx-auto"></div>
+            </div>
+
+            <!-- Social Icons Grid -->
+            <div class="flex flex-wrap justify-center gap-8 sm:gap-12 reveal" style="transition-delay: 0.2s;">
+                
+                <!-- TikTok -->
+                <a href="https://tiktok.com/@yourusername" target="_blank" rel="noopener noreferrer" 
+                   class="social-icon group relative p-6 glass rounded-2xl hover:bg-black/40 hover:border-pink-500/50 border border-white/5"
+                   aria-label="Follow on TikTok">
+                    <i class="fab fa-tiktok text-3xl sm:text-4xl text-white group-hover:text-pink-500 transition-colors duration-300"></i>
+                    <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 whitespace-nowrap">
+                        TikTok
+                    </div>
+                </a>
+
+                <!-- YouTube -->
+                <a href="https://youtube.com/@yourchannel" target="_blank" rel="noopener noreferrer" 
+                   class="social-icon group relative p-6 glass rounded-2xl hover:bg-black/40 hover:border-red-600/50 border border-white/5"
+                   aria-label="Subscribe on YouTube">
+                    <i class="fab fa-youtube text-3xl sm:text-4xl text-white group-hover:text-red-600 transition-colors duration-300"></i>
+                    <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 whitespace-nowrap">
+                        YouTube
+                    </div>
+                </a>
+
+                <!-- ScriptBlox (Custom Icon using Code symbol) -->
+                <a href="https://scriptblox.com/user/yourusername" target="_blank" rel="noopener noreferrer" 
+                   class="social-icon group relative p-6 glass rounded-2xl hover:bg-black/40 hover:border-blue-500/50 border border-white/5"
+                   aria-label="ScriptBlox Profile">
+                    <i class="fas fa-code text-3xl sm:text-4xl text-white group-hover:text-blue-500 transition-colors duration-300"></i>
+                    <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 whitespace-nowrap">
+                        ScriptBlox
+                    </div>
+                </a>
+
+                <!-- Roblox Group -->
+                <a href="https://www.roblox.com/groups/yourgroupid" target="_blank" rel="noopener noreferrer" 
+                   class="social-icon group relative p-6 glass rounded-2xl hover:bg-black/40 hover:border-gray-400/50 border border-white/5"
+                   aria-label="Join Roblox Group">
+                    <i class="fas fa-gamepad text-3xl sm:text-4xl text-white group-hover:text-gray-300 transition-colors duration-300"></i>
+                    <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 whitespace-nowrap">
+                        Roblox Group
+                    </div>
+                </a>
+
+                <!-- Support Website -->
+                <a href="https://your-support-site.com" target="_blank" rel="noopener noreferrer" 
+                   class="social-icon group relative p-6 glass rounded-2xl hover:bg-black/40 hover:border-green-500/50 border border-white/5"
+                   aria-label="Support Website">
+                    <i class="fas fa-heart text-3xl sm:text-4xl text-white group-hover:text-green-500 transition-colors duration-300"></i>
+                    <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 whitespace-nowrap">
+                        Support
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-20 py-8 text-center text-gray-600 text-sm">
+        <p>&copy; 2026 Cinematic Portfolio. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // CUSTOMIZATION VARIABLES
+        // ==========================================
+        
+        // Replace these URLs with your own assets:
+        const CONFIG = {
+            backgroundImage: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80',
+            profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+            audioFile: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            // Set to true if you want audio to attempt autoplay (browsers may block)
+            autoplayAudio: false,
+            // Particle settings
+            particleCount: 50,
+            particleColor: 'rgba(212, 175, 55, 0.5)' // Gold color
+        };
+
+        // Apply custom images
+        document.getElementById('heroBackground').style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
+        document.getElementById('profileImage').src = CONFIG.profileImage;
+        
+        // Update audio source
+        const audio = document.getElementById('ambientAudio');
+        const source = audio.querySelector('source');
+        source.src = CONFIG.audioFile;
+        audio.load();
+
+        // ==========================================
+        // AUDIO HANDLING
+        // ==========================================
+        
+        const audioToggle = document.getElementById('audioToggle');
+        const audioIcon = document.getElementById('audioIcon');
+        let isPlaying = false;
+        let audioContext = null;
+        let gainNode = null;
+
+        // Initialize audio context for smooth fades
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const track = audioContext.createMediaElementSource(audio);
+                gainNode = audioContext.createGain();
+                track.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                gainNode.gain.value = 0.3; // Start at 30% volume
+            }
+        }
+
+        function fadeAudio(targetVolume, duration = 1000) {
+            if (!gainNode) return;
+            const currentTime = audioContext.currentTime;
+            gainNode.gain.cancelScheduledValues(currentTime);
+            gainNode.gain.setValueAtTime(gainNode.gain.value, currentTime);
+            gainNode.gain.linearRampToValueAtTime(targetVolume, currentTime + duration / 1000);
+        }
+
+        async function toggleAudio() {
+            if (!audioContext) initAudioContext();
+            
+            if (isPlaying) {
+                fadeAudio(0, 500);
+                setTimeout(() => {
+                    audio.pause();
+                    audioIcon.classList.remove('fa-volume-up');
+                    audioIcon.classList.add('fa-volume-mute');
+                    audioToggle.classList.remove('audio-pulse');
+                }, 500);
+            } else {
+                audio.volume = 0.3;
+                await audio.play();
+                fadeAudio(0.3, 1000);
+                audioIcon.classList.remove('fa-volume-mute');
+                audioIcon.classList.add('fa-volume-up');
+                audioToggle.classList.add('audio-pulse');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        audioToggle.addEventListener('click', toggleAudio);
+
+        // Handle audio ending/looping smoothly
+        audio.addEventListener('timeupdate', () => {
+            // If near end, fade out slightly before loop for seamless transition
+            if (audio.duration - audio.currentTime < 0.5 && isPlaying) {
+                fadeAudio(0.1, 400);
+            }
+        });
+
+        audio.addEventListener('loop', () => {
+            if (isPlaying) fadeAudio(0.3, 500);
+        });
+
+        // Attempt autoplay if configured
+        if (CONFIG.autoplayAudio) {
+            window.addEventListener('load', async () => {
+                try {
+                    await toggleAudio();
+                } catch (e) {
+                    console.log('Autoplay blocked by browser. User interaction required.');
+                    // Show unmute hint
+                    audioToggle.classList.add('ring-2', 'ring-cinematic-gold', 'ring-offset-2', 'ring-offset-cinematic-900');
+                }
+            });
+        }
+
+        // ==========================================
+        // PARTICLE SYSTEM
+        // ==========================================
+        
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+   
