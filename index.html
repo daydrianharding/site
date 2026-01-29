@@ -1,10 +1,9 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creator Portfolio</title>
-    <meta name="description" content="Visual Experience Designer">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,8 +12,6 @@
     
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -28,16 +25,12 @@
                     colors: {
                         'cinematic': {
                             900: '#050508',
-                            800: '#0a0a12',
                             gold: '#e6c898',
-                            rose: '#e8b4b8',
                         }
                     },
                     animation: {
                         'slow-zoom': 'slowZoom 25s ease-in-out infinite alternate',
                         'float': 'float 6s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
-                        'shimmer': 'shimmer 3s linear infinite',
                     },
                     keyframes: {
                         slowZoom: {
@@ -47,14 +40,6 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-15px)' },
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 40px rgba(230, 200, 152, 0.2)' },
-                            '50%': { boxShadow: '0 0 60px rgba(230, 200, 152, 0.4)' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-200% center' },
-                            '100%': { backgroundPosition: '200% center' },
                         }
                     }
                 }
@@ -63,418 +48,188 @@
     </script>
     
     <style>
-        * {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+        * { -webkit-font-smoothing: antialiased; }
         
-        /* Entrance Overlay */
-        #entrance-overlay {
+        .grain {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #050508 0%, #0a0a12 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 1.5s ease, visibility 1.5s;
-        }
-        
-        #entrance-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        
-        .enter-btn {
-            position: relative;
-            padding: 18px 48px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            letter-spacing: 0.4em;
-            color: #e6c898;
-            background: transparent;
-            border: 1px solid rgba(230, 200, 152, 0.3);
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-        }
-        
-        .enter-btn:hover {
-            background: rgba(230, 200, 152, 0.05);
-            border-color: #e6c898;
-            box-shadow: 0 0 40px rgba(230, 200, 152, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .enter-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(230, 200, 152, 0.2), transparent);
-            transition: left 0.7s;
-        }
-        
-        .enter-btn:hover::before {
-            left: 100%;
-        }
-        
-        /* Grain Overlay */
-        .grain-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.03;
             pointer-events: none;
             z-index: 5;
-            mix-blend-mode: overlay;
         }
         
-        /* Aurora Background */
         .aurora {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.4;
+            inset: 0;
             background: 
                 radial-gradient(circle at 20% 30%, rgba(232, 180, 184, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(230, 200, 152, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+                radial-gradient(circle at 80% 70%, rgba(230, 200, 152, 0.1) 0%, transparent 50%);
             filter: blur(80px);
-            animation: auroraMove 25s ease infinite;
+            z-index: 0;
+            animation: move 25s infinite;
         }
         
-        @keyframes auroraMove {
-            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            33% { transform: translate(20px, -20px) rotate(120deg) scale(1.1); }
-            66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
+        @keyframes move {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
         }
         
-        /* Glassmorphism */
         .glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
         
-        /* Profile Container */
-        .profile-container {
-            position: relative;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .profile-container::before {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent, #e6c898, transparent);
-            opacity: 0.2;
-            animation: spin 8s linear infinite;
-            filter: blur(8px);
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Social Icons Layout - 3 top, 2 bottom */
-        .social-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            align-items: center;
-        }
-        
-        .social-row {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-        }
-        
-        .social-icon {
-            position: relative;
-            width: 85px;
-            height: 85px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .social-icon:hover {
-            transform: translateY(-8px) scale(1.05);
-            border-color: rgba(230, 200, 152, 0.5);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(230, 200, 152, 0.15);
-        }
-        
-        .social-icon i {
-            font-size: 1.75rem;
-            transition: color 0.3s;
-        }
-        
-        /* Specific hover colors */
-        .social-icon:hover .fa-tiktok { color: #ff2d55; }
-        .social-icon:hover .fa-youtube { color: #ff0000; }
-        .social-icon:hover .fa-code { color: #60a5fa; }
-        .social-icon:hover .fa-gamepad { color: #a3a3a3; }
-        .social-icon:hover .fa-heart { color: #34d399; }
-        
-        /* Reveal Animation */
-        .reveal {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
-        }
-        
-        .js-enabled .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        
-        .js-enabled .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Text Effects */
         .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, #e6c898 50%, #fff 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 4s linear infinite;
-        }
-        
-        .subtitle-text {
-            background: linear-gradient(to right, rgba(255,255,255,0.4), rgba(230,200,152,0.6), rgba(255,255,255,0.4));
+            background: linear-gradient(to bottom, #fff, #e6c898);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        /* Scroll Progress */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #e6c898, transparent);
-            z-index: 9999;
-            transition: width 0.1s;
-            box-shadow: 0 0 10px rgba(230, 200, 152, 0.5);
-        }
-        
-        /* Hide YouTube */
         #yt-player {
             position: absolute;
             opacity: 0;
-            pointer-events: none;
             width: 0;
             height: 0;
-            overflow: hidden;
         }
         
-        /* Responsive */
-        @media (max-width: 640px) {
-            .social-icon {
-                width: 70px;
-                height: 70px;
-            }
-            .social-icon i {
-                font-size: 1.5rem;
-            }
-            .social-row {
-                gap: 1rem;
-            }
-        }
-        
-        /* Elegant divider */
-        .elegant-divider {
+        /* Floating audio button for fallback */
+        .audio-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(230, 200, 152, 0.1);
+            border: 1px solid rgba(230, 200, 152, 0.3);
+            color: #e6c898;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin: 2rem 0;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
         }
         
-        .elegant-divider::before,
-        .elegant-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(230, 200, 152, 0.3), transparent);
+        .audio-btn.show {
+            opacity: 1;
+            visibility: visible;
         }
         
-        .elegant-divider i {
-            color: rgba(230, 200, 152, 0.4);
-            font-size: 0.6rem;
+        .audio-btn:hover {
+            background: rgba(230, 200, 152, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .audio-btn.playing {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(230, 200, 152, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(230, 200, 152, 0); }
         }
     </style>
 </head>
-<body class="bg-cinematic-900 text-white font-inter antialiased overflow-x-hidden">
+<body class="bg-[#050508] text-white font-[Inter]">
 
-    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="grain"></div>
     <div class="aurora"></div>
-    <div class="grain-overlay"></div>
     <div id="yt-player"></div>
+    
+    <!-- Audio fallback button (appears if autoplay blocked) -->
+    <button id="audioBtn" class="audio-btn" onclick="toggleAudio()" title="Play Music">
+        <i class="fas fa-play" id="audioIcon"></i>
+    </button>
 
-    <!-- Entrance Overlay -->
-    <div id="entrance-overlay">
-        <div class="text-center px-4">
-            <div class="mb-8 text-cinematic-gold/60 text-4xl tracking-[0.5em] uppercase font-cinzel text-sm">
-                Welcome
-            </div>
-            <button class="enter-btn" id="enterBtn">
-                Enter
-            </button>
-            <p class="mt-8 text-white/20 text-[10px] tracking-[0.4em] uppercase">
-                Click to Begin Experience
-            </p>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 z-0" id="parallax-bg">
-            <div id="heroBg" class="absolute inset-0 bg-cover bg-center animate-slow-zoom scale-110" 
-                 style="background-image: url('https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80'); filter: brightness(0.6) contrast(1.1);">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-cover bg-center animate-slow-zoom scale-110" 
+                 style="background-image: url('https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80'); filter: brightness(0.6);">
             </div>
-            <div class="absolute inset-0 bg-gradient-to-b from-cinematic-900/90 via-cinematic-900/50 to-cinematic-900"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-cinematic-900/80 via-transparent to-cinematic-900/80"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-[#050508]/90 via-[#050508]/50 to-[#050508]"></div>
         </div>
 
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            
-            <!-- Profile -->
-            <div class="mb-12 reveal">
-                <div class="profile-container w-48 h-48 mx-auto">
-                    <div class="absolute inset-0 rounded-full bg-cinematic-gold/20 blur-3xl animate-pulse-glow"></div>
-                    <div class="relative w-full h-full rounded-full overflow-hidden border border-white/10 glass p-1">
-                        <img id="profileImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80" 
-                             alt="Profile" 
-                             class="w-full h-full object-cover rounded-full hover:scale-110 transition-transform duration-700">
-                    </div>
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
+            <div class="mb-10 animate-float">
+                <div class="relative w-44 h-44 mx-auto rounded-full overflow-hidden border border-white/10 glass p-1">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80" 
+                         alt="Profile" class="w-full h-full object-cover rounded-full hover:scale-110 transition duration-700">
                 </div>
             </div>
 
-            <!-- Title -->
-            <div class="space-y-4 reveal" data-delay="200">
-                <h1 class="font-cinzel text-6xl md:text-8xl font-bold tracking-wider scramble-text gradient-text" id="mainTitle">
-                    CREATOR
-                </h1>
-                <p class="text-base md:text-lg subtitle-text font-light tracking-[0.3em] uppercase">
-                    Visual Experience Designer
-                </p>
-            </div>
-
-            <!-- Decorative Line -->
-            <div class="mt-12 reveal" data-delay="400">
-                <div class="w-px h-16 bg-gradient-to-b from-cinematic-gold/50 to-transparent mx-auto"></div>
-            </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 reveal" data-delay="600">
-            <div class="flex flex-col items-center gap-3 opacity-40">
-                <span class="text-[9px] tracking-[0.4em] uppercase font-cinzel">Scroll</span>
-                <div class="w-px h-8 bg-gradient-to-b from-white to-transparent"></div>
-            </div>
+            <h1 class="font-[Cinzel] text-6xl md:text-8xl font-bold tracking-wider gradient-text mb-4">
+                CREATOR
+            </h1>
+            <p class="text-gray-400 text-sm md:text-base tracking-[0.3em] uppercase">
+                Visual Experience Designer
+            </p>
+            
+            <div class="mt-12 w-px h-16 bg-gradient-to-b from-[#e6c898]/50 to-transparent mx-auto"></div>
         </div>
     </section>
 
-    <!-- Social Section -->
-    <section class="relative py-28 px-4 bg-cinematic-900/80 backdrop-blur-sm">
+    <!-- Social 3-2 -->
+    <section class="py-24 px-4 bg-[#050508] relative z-10">
         <div class="max-w-2xl mx-auto text-center">
-            
-            <div class="mb-16 reveal">
-                <h2 class="font-cinzel text-4xl md:text-5xl text-white mb-4 tracking-wider">Connect</h2>
-                <div class="elegant-divider">
-                    <i class="fas fa-diamond"></i>
-                </div>
+            <h2 class="font-[Cinzel] text-4xl mb-2">Connect</h2>
+            <div class="flex items-center justify-center gap-4 mb-12 opacity-30">
+                <div class="h-px w-12 bg-[#e6c898]"></div>
+                <i class="fas fa-diamond text-xs text-[#e6c898]"></i>
+                <div class="h-px w-12 bg-[#e6c898]"></div>
             </div>
-
-            <!-- 3-2 Layout -->
-            <div class="social-wrapper reveal" data-delay="200">
-                
-                <!-- Top Row: 3 Icons -->
-                <div class="social-row">
-                    <a href="https://tiktok.com/@aavauz" target="_blank" rel="noopener" 
-                       class="social-icon" aria-label="TikTok">
-                        <i class="fab fa-tiktok"></i>
+            
+            <div class="flex flex-col gap-6">
+                <!-- Top: 3 -->
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <a href="https://tiktok.com/@aavauz" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#ff2d55]">
+                        <i class="fab fa-tiktok text-2xl"></i>
                     </a>
-
-                    <a href="https://m.youtube.com/@Avaauz" target="_blank" rel="noopener" 
-                       class="social-icon" aria-label="YouTube">
-                        <i class="fab fa-youtube"></i>
+                    <a href="https://m.youtube.com/@Avaauz" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#ff0000]">
+                        <i class="fab fa-youtube text-2xl"></i>
                     </a>
-
-                    <a href="https://scriptblox.com/u/Aava" target="_blank" rel="noopener" 
-                       class="social-icon" aria-label="ScriptBlox">
-                        <i class="fas fa-code"></i>
+                    <a href="https://scriptblox.com/u/Aava" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#60a5fa]">
+                        <i class="fas fa-code text-2xl"></i>
                     </a>
                 </div>
-
-                <!-- Bottom Row: 2 Icons -->
-                <div class="social-row">
-                    <a href="https://www.roblox.com/communities/1070600773/Aavs#!/about" target="_blank" rel="noopener" 
-                       class="social-icon" aria-label="Roblox Group">
-                        <i class="fas fa-gamepad"></i>
+                <!-- Bottom: 2 -->
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <a href="https://www.roblox.com/communities/1070600773/Aavs#!/about" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-gray-400">
+                        <i class="fas fa-gamepad text-2xl"></i>
                     </a>
-
-                    <a href="https://avabug.lovable.app" target="_blank" rel="noopener" 
-                       class="social-icon" aria-label="Support">
-                        <i class="fas fa-heart"></i>
+                    <a href="https://avabug.lovable.app" target="_blank" class="w-20 h-20 glass rounded-2xl flex items-center justify-center text-white hover:scale-110 transition hover:text-[#34d399]">
+                        <i class="fas fa-heart text-2xl"></i>
                     </a>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <footer class="relative py-10 text-center text-white/20 text-[10px] tracking-[0.2em] uppercase border-t border-white/5 bg-cinematic-900">
-        <p>&copy; 2026 Creator Portfolio</p>
+    <footer class="py-8 text-center text-white/20 text-xs tracking-widest uppercase border-t border-white/5 relative z-10">
+        <p>&copy; 2026 Portfolio</p>
     </footer>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    
     <script>
         const CONFIG = {
-            bgImage: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=1920&q=80',
-            profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
             youtubeId: 'Dzpz1DrSVMU',
         };
 
-        document.getElementById('heroBg').style.backgroundImage = `url('${CONFIG.bgImage}')`;
-        document.getElementById('profileImg').src = CONFIG.profileImage;
-
-        // YouTube Player
         let player;
+        let isPlaying = false;
+        let autoplayFailed = false;
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
-                height: '0',
-                width: '0',
                 videoId: CONFIG.youtubeId,
                 playerVars: {
-                    autoplay: 0,
+                    autoplay: 1, // Try autoplay immediately
                     loop: 1,
                     playlist: CONFIG.youtubeId,
                     controls: 0,
@@ -485,59 +240,71 @@
                     fs: 0,
                 },
                 events: {
-                    onReady: (e) => {
-                        player.setVolume(40);
-                    }
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange,
+                    onError: onPlayerError
                 }
             });
         }
 
-        // Entrance
-        const overlay = document.getElementById('entrance-overlay');
-        const enterBtn = document.getElementById('enterBtn');
-        
-        function startExperience() {
-            overlay.classList.add('hidden');
-            document.body.style.overflow = 'auto';
+        function onPlayerReady(event) {
+            player.setVolume(35);
             
-            if (player && player.playVideo) {
-                player.playVideo();
-            } else {
-                setTimeout(() => player && player.playVideo(), 1000);
+            // Try to play immediately
+            event.target.playVideo();
+            
+            // Check if actually playing after 2 seconds
+            setTimeout(() => {
+                const state = player.getPlayerState();
+                console.log('Player state:', state); // 1 = playing, -1 = unstarted, 3 = buffering
+                
+                if (state !== 1 && state !== 3) {
+                    // Autoplay blocked
+                    console.log('Autoplay blocked by browser');
+                    autoplayFailed = true;
+                    document.getElementById('audioBtn').classList.add('show');
+                }
+            }, 2000);
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                autoplayFailed = false;
+                const btn = document.getElementById('audioBtn');
+                btn.classList.add('playing');
+                btn.classList.remove('show'); // Hide if it was showing
+                document.getElementById('audioIcon').className = 'fas fa-music';
+            } else if (event.data === YT.PlayerState.ENDED) {
+                player.playVideo(); // Loop
             }
-            
-            document.querySelectorAll('.reveal').forEach((el, i) => {
-                setTimeout(() => el.classList.add('active'), i * 150);
-            });
         }
 
-        enterBtn.addEventListener('click', startExperience);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) startExperience();
-        });
+        function onPlayerError(event) {
+            console.error('YouTube error:', event.data);
+            document.getElementById('audioBtn').classList.add('show');
+        }
 
-        // Scroll Progress
-        window.addEventListener('scroll', () => {
-            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            document.getElementById('scrollProgress').style.width = scrolled + "%";
-        }, { passive: true });
+        function toggleAudio() {
+            if (!player || !player.playVideo) return;
+            
+            if (isPlaying) {
+                player.pauseVideo();
+                document.getElementById('audioIcon').className = 'fas fa-play';
+                document.getElementById('audioBtn').classList.remove('playing');
+            } else {
+                player.playVideo();
+                document.getElementById('audioIcon').className = 'fas fa-pause';
+            }
+            isPlaying = !isPlaying;
+        }
 
-        // Intersection Observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('active'), 
-                              parseInt(entry.target.dataset.delay) || 0);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Text Scramble
-        class TextScramble {
-            constructor(el) {
-                this.el = el;
-                this.chars = '!<>-_\\/[]{}—=+*^?#________';
-    
+        // Fallback: If user clicks anywhere on page and audio isn't playing, try to start
+        document.addEventListener('click', () => {
+            if (autoplayFailed && player && player.playVideo && !isPlaying) {
+                player.playVideo();
+            }
+        }, { once: true });
+    </script>
+</body>
+                        </html>
