@@ -33,7 +33,7 @@
                         }
                     },
                     animation: {
-                        'slow-zoom': 'slowZoom 20s ease-in-out infinite alternate',
+                        'slow-zoom': 'slowZoom 30s ease-in-out infinite alternate',
                         'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
@@ -52,14 +52,18 @@
     </script>
     
     <style>
-        /* CRITICAL: Ensure content is visible even if JS fails */
+        /* Performance optimizations */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
         .reveal {
-            opacity: 1 !important; /* Force visible by default */
+            opacity: 1 !important;
             transform: translateY(0) !important;
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
         
-        /* Only hide if JS is working and hasn't revealed yet */
         .js-enabled .reveal {
             opacity: 0 !important;
             transform: translateY(30px) !important;
@@ -69,55 +73,38 @@
             opacity: 1 !important;
             transform: translateY(0) !important;
         }
-        
-        /* Fallback for no-js */
-        .no-js .reveal {
-            opacity: 1 !important;
-            transform: none !important;
-        }
 
-        /* Grain overlay */
+        /* Optimized grain - static instead of animated for performance */
         .grain-overlay {
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.04;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
             pointer-events: none;
             z-index: 1;
-            animation: grain 8s steps(10) infinite;
-        }
-        
-        @keyframes grain {
-            0%, 100% { transform: translate(0, 0); }
-            10% { transform: translate(-5%, -10%); }
-            20% { transform: translate(-15%, 5%); }
-            30% { transform: translate(7%, -25%); }
-            40% { transform: translate(-5%, 25%); }
-            50% { transform: translate(-15%, 10%); }
-            60% { transform: translate(15%, 0%); }
-            70% { transform: translate(0%, 15%); }
-            80% { transform: translate(3%, 35%); }
-            90% { transform: translate(-10%, 10%); }
+            /* Removed animation for performance */
+            will-change: transform;
         }
         
         .glass {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateZ(0); /* Hardware acceleration */
         }
         
         .social-icon {
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
         }
         .social-icon:hover {
             transform: scale(1.15) translateY(-5px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
         }
         
-        /* Particle canvas behind content */
         #particles {
             position: fixed;
             top: 0;
@@ -126,15 +113,14 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            contain: strict; /* Performance containment */
         }
         
-        /* Ensure content layers above particles */
         .content-layer {
             position: relative;
             z-index: 10;
         }
         
-        /* Image error handling */
         .img-fallback {
             background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
             display: flex;
@@ -142,26 +128,31 @@
             justify-content: center;
             color: #d4af37;
         }
+        
+        /* Optimize animations */
+        .animate-slow-zoom, .animate-float {
+            will-change: transform;
+            backface-visibility: hidden;
+        }
     </style>
 </head>
 <body class="bg-cinematic-900 text-white font-inter antialiased">
     
-    <!-- Add JS detection class -->
     <script>document.documentElement.classList.add('js-enabled');</script>
-    <noscript><style>.js-enabled .reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
 
-    <!-- Grain -->
+    <!-- Static Grain (Better Performance) -->
     <div class="grain-overlay"></div>
     
     <!-- Particles -->
     <canvas id="particles"></canvas>
 
-    <!-- Audio -->
-    <audio id="ambientAudio" loop preload="metadata">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <!-- Audio: Replace this with your own hosted MP3 file -->
+    <!-- NOTE: You cannot use YouTube URLs directly. Download the audio from YouTube and upload it as an MP3 -->
+    <audio id="ambientAudio" loop preload="none">
+        <source src="your-audio-file.mp3" type="audio/mpeg">
     </audio>
 
-    <button id="audioToggle" class="fixed top-6 right-6 z-50 glass rounded-full p-4 text-cinematic-gold hover:bg-white/10 transition-all z-50" aria-label="Toggle music">
+    <button id="audioToggle" class="fixed top-6 right-6 z-50 glass rounded-full p-4 text-cinematic-gold hover:bg-white/10 transition-all" aria-label="Toggle music">
         <i class="fas fa-volume-mute text-xl" id="audioIcon"></i>
     </button>
 
@@ -259,23 +250,29 @@
     </section>
 
     <footer class="relative py-8 text-center text-gray-600 text-sm content-layer bg-cinematic-900 border-t border-white/5">
-        <p>&copy; </p>
+        <p>&copy; 2026</p>
     </footer>
 
     <script>
-        // CONFIG - Replace these URLs
+        // CONFIG
         const CONFIG = {
             bgImage: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80',
             profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
-            audioFile: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+            // IMPORTANT: Replace with your own MP3 file URL. YouTube links won't work directly.
+            audioFile: 'your-audio-file.mp3' 
         };
 
         // Apply images
         document.getElementById('heroBg').style.backgroundImage = `url('${CONFIG.bgImage}')`;
         document.getElementById('profileImg').src = CONFIG.profileImage;
-        document.querySelector('#ambientAudio source').src = CONFIG.audioFile;
+        
+        // Only set audio if file exists
+        const audioEl = document.querySelector('#ambientAudio source');
+        if(audioEl && CONFIG.audioFile !== 'your-audio-file.mp3') {
+            audioEl.src = CONFIG.audioFile;
+        }
 
-        // AUDIO
+        // AUDIO CONTROL
         const audio = document.getElementById('ambientAudio');
         const toggle = document.getElementById('audioToggle');
         const icon = document.getElementById('audioIcon');
@@ -286,59 +283,90 @@
                 if (playing) {
                     audio.pause();
                     icon.className = 'fas fa-volume-mute text-xl';
-                    toggle.classList.remove('animate-pulse');
+                    toggle.classList.remove('ring-2', 'ring-cinematic-gold');
                 } else {
+                    // Load audio only on first click if not loaded
+                    if(audio.readyState === 0) audio.load();
                     await audio.play();
                     icon.className = 'fas fa-volume-up text-xl';
-                    toggle.classList.add('animate-pulse');
+                    toggle.classList.add('ring-2', 'ring-cinematic-gold');
                 }
                 playing = !playing;
             } catch(e) {
                 console.error('Audio error:', e);
+                alert('Audio file not found. Please add your MP3 file.');
             }
         });
 
-        // PARTICLES (Lightweight)
+        // OPTIMIZED PARTICLES (Lag Fix)
         const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true }); // Alpha for transparency
         let particles = [];
+        let animationId = null;
+        let isVisible = true;
+        let frameCount = 0;
         
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
         resize();
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', resize, { passive: true });
 
-        for(let i = 0; i < 50; i++) {
+        // Reduced to 25 particles for performance
+        for(let i = 0; i < 25; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                r: Math.random() * 2,
+                r: Math.random() * 1.5 + 0.5,
                 d: Math.random() * Math.PI * 2,
-                s: Math.random() * 0.5 + 0.1
+                s: Math.random() * 0.3 + 0.1
             });
         }
 
         function animate() {
+            if (!isVisible) {
+                animationId = requestAnimationFrame(animate);
+                return;
+            }
+            
+            // Skip every other frame (30fps instead of 60fps) for performance
+            frameCount++;
+            if (frameCount % 2 !== 0) {
+                animationId = requestAnimationFrame(animate);
+                return;
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(212, 175, 55, 0.5)';
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
             
             particles.forEach(p => {
                 p.x += Math.cos(p.d) * p.s;
                 p.y += Math.sin(p.d) * p.s;
-                if(p.x < 0 || p.x > canvas.width) p.d = Math.PI - p.d;
-                if(p.y < 0 || p.y > canvas.height) p.d = -p.d;
+                
+                // Wrap around screen instead of bounce (cheaper calculation)
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
                 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                 ctx.fill();
             });
-            requestAnimationFrame(animate);
+            
+            animationId = requestAnimationFrame(animate);
         }
+        
+        // Start animation
         animate();
 
-        // REVEAL ANIMATION (Robust IntersectionObserver)
+        // CRITICAL: Pause when tab is hidden to save resources
+        document.addEventListener('visibilitychange', () => {
+            isVisible = !document.hidden;
+        });
+
+        // REVEAL ANIMATION
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -347,7 +375,6 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Add stagger delay if specified
                     const delay = entry.target.dataset.delay || 0;
                     setTimeout(() => {
                         entry.target.classList.add('active');
@@ -357,19 +384,16 @@
             });
         }, observerOptions);
 
-        // Observe all reveal elements
         document.querySelectorAll('.reveal').forEach(el => {
             observer.observe(el);
         });
 
-        // Fallback: Force reveal all after 3 seconds if observer fails
+        // Fallback
         setTimeout(() => {
             document.querySelectorAll('.reveal').forEach(el => {
                 el.classList.add('active');
             });
         }, 3000);
-
-        console.log('Portfolio loaded successfully');
     </script>
 </body>
 </html>
